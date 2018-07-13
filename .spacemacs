@@ -31,14 +31,26 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     yaml
+     html
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      ;; auto-completion
+     (auto-completion :variables
+                      auto-completion-return-key-behavior 'complete
+                      auto-completion-tab-key-behavior 'cycle
+                      auto-completion-complete-with-key-sequence nil
+                      auto-completion-complete-with-key-sequence-delay 0.1
+                      auto-completion-enable-snippets-in-popup t
+                      auto-completion-enable-sort-by-usage nil
+                      auto-completion-private-snippets-directory nil)
      better-defaults
-     ivy
+     ;;ivy
+     helm
+     rcirc
      emacs-lisp
      c-c++
      (c-c++ :variables
@@ -108,7 +120,7 @@ values."
    ;; when the current branch is not `develop'. Note that checking for
    ;; new versions works via git commands, thus it calls GitHub services
    ;; whenever you start Emacs. (default nil)
-   dotspacemacs-check-for-update nil
+   dotspacemacs-check-for-update t
    ;; If non-nil, a form that evaluates to a package directory. For example, to
    ;; use different package directories for different Emacs versions, set this
    ;; to `emacs-version'.
@@ -282,17 +294,19 @@ values."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers 'relative 
+   dotspacemacs-line-numbers 'relative
    ;;dotspacemacs-line-numbers '(:disabled-for-modes
    ;;                            text-mode
    ;;                            :relative t)
    ;;(dotspacemacs-line-numbers 'relative)
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
-   dotspacemacs-folding-method 'evil
+   ;;dotspacemacs-folding-method 'evil
+
+   dotspacemacs-folding-method 'origami
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
-   dotspacemacs-smartparens-strict-mode t
+   dotspacemacs-smartparens-strict-mode nil
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc…
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
@@ -328,6 +342,8 @@ executes.
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
 
+ ;; (setq browse-url-browser-function 'eww-browse-url)
+ (add-to-list 'load-path "~/.emacs.d/private/go-autcomplete/")
  (add-to-list 'load-path "~/.emacs.d/private/apex-mode/")
  (add-to-list 'auto-mode-alist '("\\.cmp\\'" . html-mode))
  (add-to-list 'auto-mode-alist '("\\.page\\'" . html-mode))
@@ -354,8 +370,18 @@ you should place your code here."
   ;;(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/monokai")
 
   ;; Indentation
+  ;;(global-set-key "\t" (lambda () (interactive) (insert-char 32 2))) ;; [tab] inserts two spaces
   (setq-default indent-tabs-mode nil)
   (setq tab-width 2)
+
+  ;;(setq-local c-basic-offset tab-width) ;; java/c/c++
+  ;;(setq-local javascript-indent-level tab-width) ; javascript-mode
+  ;;(setq-local js-indent-level tab-width) ; js-mode
+  ;;(setq-local js2-basic-offset tab-width) ; js2-mode, in latest js2-mode, it's alias of js-indent-level
+  ;;(setq-local web-mode-markup-indent-offset tab-width) ; web-mode, html tag in html file
+  ;;(setq-local web-mode-css-indent-offset tab-width) ; web-mode, css in html file
+  ;;(setq-local web-mode-code-indent-offset tab-width) ; web-mode, js code in html file
+  ;;(setq-local css-indent-offset tab-width) ; css-mode
 
   ;; Mac OSX keystrokes
   (setq default-input-method "MacOSX")
@@ -375,6 +401,9 @@ you should place your code here."
   ;; Salesforce syntax highlighting
   (require 'apex-mode)
 
+  ;; Golang autocomplete
+  (require 'go-autocomplete)
+
   ;; Neotree
   (require 'neotree)
   (setq neo-theme 'ascii)
@@ -386,8 +415,8 @@ you should place your code here."
    (spacemacs/toggle-transparency)
 
   ;; Initial frame size
-  (setq initial-frame-alist '((top . 290)
-                              (left . 310)
+  (setq initial-frame-alist '((top . 660)
+                              (left . 770)
                               (width . 147)
                               (height . 50)))
 
@@ -404,7 +433,7 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (slime-company company slime geiser unfill mwim clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider seq queue clojure-mode org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional cython-mode anaconda-mode pythonic web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode go-guru go-eldoc go-mode ws-butler winum wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu highlight elisp-slime-nav dumb-jump popup diminish define-word counsel-projectile projectile pkg-info epl counsel swiper column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed ace-link which-key undo-tree org-plus-contrib ivy hydra evil-unimpaired f s dash async aggressive-indent adaptive-wrap ace-window avy))))
+    (yaml-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data helm-company helm-c-yasnippet fuzzy company-tern tern company-statistics company-go company-c-headers company-anaconda common-lisp-snippets clojure-snippets auto-yasnippet ac-ispell auto-complete origami org-mime ghub let-alist rcirc-notify rcirc-color eww-lnum helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-gitignore helm-flx helm-descbinds helm-ag ace-jump-helm-line xterm-color smeargle shell-pop orgit multi-term mmm-mode markdown-toc markdown-mode magit-gitflow gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit with-editor evil-commentary eshell-z eshell-prompt-extras esh-help disaster cmake-mode clang-format slime-company company slime geiser unfill mwim clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider seq queue clojure-mode org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional cython-mode anaconda-mode pythonic web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode go-guru go-eldoc go-mode ws-butler winum wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu highlight elisp-slime-nav dumb-jump popup diminish define-word counsel-projectile projectile pkg-info epl counsel swiper column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed ace-link which-key undo-tree org-plus-contrib ivy hydra evil-unimpaired f s dash async aggressive-indent adaptive-wrap ace-window avy))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
