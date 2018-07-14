@@ -413,8 +413,14 @@ you should place your code here."
 
    ;; Transient mode
    (spacemacs/toggle-transparency)
+ 
+ ;; Initial frame size MacBook
+ ;; (setq initial-frame-alist '((top . 290)
+ ;;                             (left . 310)
+ ;;                             (width . 147)
+ ;;                             (height . 50)))
 
-  ;; Initial frame size
+  ;; Initial frame size iMac
   (setq initial-frame-alist '((top . 660)
                               (left . 770)
                               (width . 147)
