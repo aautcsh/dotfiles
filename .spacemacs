@@ -343,7 +343,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
 
  ;; (setq browse-url-browser-function 'eww-browse-url)
- (add-to-list 'load-path "~/.emacs.d/private/go-autcomplete/")
+  (add-to-list 'load-path "~/.emacs.d/private/go-autocomplete/")
  (add-to-list 'load-path "~/.emacs.d/private/apex-mode/")
  (add-to-list 'auto-mode-alist '("\\.cmp\\'" . html-mode))
  (add-to-list 'auto-mode-alist '("\\.page\\'" . html-mode))
@@ -413,14 +413,14 @@ you should place your code here."
 
    ;; Transient mode
    (spacemacs/toggle-transparency)
- 
- ;; Initial frame size MacBook
- ;; (setq initial-frame-alist '((top . 290)
- ;;                             (left . 310)
- ;;                             (width . 147)
- ;;                             (height . 50)))
 
-  ;; Initial frame size iMac
+   ;; Initial frame size MacBook
+   ;; (setq initial-frame-alist '((top . 290)
+   ;;                             (left . 310)
+   ;;                             (width . 147)
+   ;;                             (height . 50)))
+
+  ;; Initial frame size
   (setq initial-frame-alist '((top . 660)
                               (left . 770)
                               (width . 147)
